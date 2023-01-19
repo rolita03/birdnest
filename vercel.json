@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "viewdrone.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "./viewdrone.py"
+      }
+    ]
+  }
