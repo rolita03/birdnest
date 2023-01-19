@@ -1,7 +1,7 @@
 {
     "builds": [
       {
-        "src": "viewdrone.py",
+        "src": "./viewdrone.py",
         "use": "@vercel/python"
       }
     ],
