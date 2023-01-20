@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 import ast
 import logger
 
+
 def get_drone_ndz():
     response = requests.get('https://assignments.reaktor.com/birdnest/drones')
     data = ET.fromstring(response.content)
@@ -28,7 +29,7 @@ def get_pilot_ndz(list_serial_ndz):
         response_pilot = requests.get(f"https://assignments.reaktor.com/birdnest/pilots/{list_serial_ndz}")
         data = response_pilot.json()
         return data
-      
+  
 
 # pilots_ndz = []
 # drone_serial = get_drone_ndz()
@@ -51,15 +52,25 @@ app = Flask(__name__)
 
 @app.route('/')
 
-
 def get_data_from_api():
     drone_serial = get_drone_ndz()
     pilots_ndz = []
     if drone_serial is not None:
      for i in drone_serial:
         pilots = get_pilot_ndz(i) 
-        pilots_ndz.append(f"{i},{pilots['firstName']},{pilots['lastName']},{pilots['email']},{pilots['phoneNumber']}")
-        # print(pilots_ndz)
+
+        # Create list of single pilot details
+        single_pilot_ndz = []
+        single_pilot_ndz.append(f"{i}")
+        single_pilot_ndz.append(f"{pilots['firstName']}")
+        single_pilot_ndz.append(f"{pilots['lastName']}")
+        single_pilot_ndz.append(f"{pilots['email']}")
+        single_pilot_ndz.append(f"{pilots['phoneNumber']}")
+
+        #Create list of lists of single pilot information
+        pilots_ndz.append(single_pilot_ndz)
+
+        print(pilots_ndz)
         # pilots_ndz_Serial = pilots_ndz_Serial.append(i)
         # pilots_ndz_first_name = pilots_ndz_first_name.append(pilots['firstName'])
         # pilots_ndz_last_name = pilots_ndz_last_name.append(pilots['lastName'])
@@ -72,12 +83,11 @@ def get_data_from_api():
         # print(f"Last name of Pilot: {pilots['lastName']}")
         # print(f"Email  of Pilot: {pilots['email']}")
         # print(f"Phone Number of Pilot: {pilots['phoneNumber']}")  
-    headings = ("FirstName","LastName","Email","PhoneNumber")
-    return render_template("table.html",pilots_ndz=pilots_ndz)
+    headings = ("SerialID","FirstName","LastName","Email","PhoneNumber")
+    return render_template("table.html",headings=headings,pilots_ndz=pilots_ndz)
+
 
 if __name__ == '__main__':
      app.run(debug=True)
-
-
 
       
